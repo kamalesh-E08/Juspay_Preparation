@@ -84,5 +84,19 @@ n = int(input())
 m = int(input())
 q = int(input())
 names = [input().strip() for _ in range(n)]
-
 tree = LockingTree(names, m)    
+
+for _ in range(q):
+    query = input().strip().split()
+    if query[0] == "1":
+        X = query[1]
+        uid = int(query[2])
+        print(tree.lock(X, uid))
+    elif query[0] == "2":
+        X = query[1]
+        uid = int(query[2])
+        print(tree.unlock(X, uid))
+    elif query[0] == "3":
+        X = query[1]
+        uid = int(query[2])
+        print(tree.upgrade(X, uid))
