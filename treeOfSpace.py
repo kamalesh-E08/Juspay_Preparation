@@ -44,7 +44,41 @@ class LockingTree:
                 current = current.parent
             return True
         return False
+    
+    def unlock(self, X, uid):
+        node = self.name_to_node[X]
+        if node.is_locked and node.locked_by == uid:
+            node.is_locked = False
+            node.locked_by = None
+            current = node.parent
+            while current:
+                current.locked_decendent_cnt -= 1
+                current = current.parent
+            return True
+        return False
+            
+    def upgrade(self, X, uid):
+        node = self.name_to_node[X]
+        if node.is_locked or node.locked_decendent_cnt == 0:
+            return False
+        decendents = [node]
+        locked_decendents = []
+        while decendents:
+            current = decendents.pop()
+            for child in current.children:
+                if child.is_locked and child.locked_by != uid:
+                    return False    
+                if child.is_locked:
+                    locked_decendents.append(child)
+                    
+                decendents.append(child)
+        for n in locked_decendents:
+            self.unlock(n.name, uid)
+        self.lock(X, uid)
+        return True
         
+        
+    
         
 n = int(input())
 m = int(input())
